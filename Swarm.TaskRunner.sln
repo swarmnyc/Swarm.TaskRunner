@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swarm.TaskRunner", "Swarm.TaskRunner\Swarm.TaskRunner.csproj", "{783D3F47-4626-4F59-ABED-2CDB39E0BBA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swarm.TaskRunner.Tests", "Swarm.TaskRunner.Tests\Swarm.TaskRunner.Tests.csproj", "{C13AFF3F-E47B-4A23-998B-E501B8E4025E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{783D3F47-4626-4F59-ABED-2CDB39E0BBA0}.Release|x64.Build.0 = Release|Any CPU
 		{783D3F47-4626-4F59-ABED-2CDB39E0BBA0}.Release|x86.ActiveCfg = Release|Any CPU
 		{783D3F47-4626-4F59-ABED-2CDB39E0BBA0}.Release|x86.Build.0 = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|x64.Build.0 = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Debug|x86.Build.0 = Debug|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|x64.ActiveCfg = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|x64.Build.0 = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|x86.ActiveCfg = Release|Any CPU
+		{C13AFF3F-E47B-4A23-998B-E501B8E4025E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
