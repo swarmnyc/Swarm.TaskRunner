@@ -55,7 +55,7 @@ namespace Swarm.TaskRunner.CLI {
 
         return executer.Execute();
       } catch (Exception ex) {
-        Logger.LogError("ERROR: Task failed by {0}", ex);
+        Logger.LogError("ERROR: {0}", ex);
 
         return 1;
       }

@@ -14,7 +14,8 @@ namespace Swarm.TaskRunner.Modules {
 
     public string FilePath { get; set; }
     public string WorkingDirectory { get; set; }
-    public IList<string> Arguments { get; } = new List<string>();
+    public string Arguments { get; set; }
+    public IList<string> ArgumentList { get; } = new List<string>();
   }
 
   public class CommandModule : Module {
@@ -29,10 +30,15 @@ namespace Swarm.TaskRunner.Modules {
       }
 
       if (node.Children.ContainsKey("args")) {
-        var args = node.Children["args"] as YamlSequenceNode;
-        if (args != null) {
-          foreach (var item in args) {
-            definition.Arguments.Add((string)item);
+        var child = node.Children["args"];
+        if (child is YamlScalarNode) {
+          definition.Arguments = (string)child;
+        } else {
+          var args = node.Children["args"] as YamlSequenceNode;
+          if (args != null) {
+            foreach (var item in args) {
+              definition.ArgumentList.Add((string)item);
+            }
           }
         }
       }
@@ -56,8 +62,12 @@ namespace Swarm.TaskRunner.Modules {
         startInfo.WorkingDirectory = context.GetValue(def.WorkingDirectory);
       }
 
-      var arguments = def.Arguments.Select(a => context.GetValue(a));
-      startInfo.Arguments = String.Join(" ", arguments);
+      if (def.Arguments == null) {
+        var arguments = def.ArgumentList.Select(a => context.GetValue(a));
+        startInfo.Arguments = String.Join(" ", arguments);
+      } else {
+        startInfo.Arguments = context.GetValue(def.Arguments);
+      }
 
       foreach (var item in context.EnvironmentVariables) {
         startInfo.EnvironmentVariables.Add(item.Key, item.Value);

@@ -1,0 +1,25 @@
+version: "1.0.0"
+label: example
+modules:
+  command: Swarm.TaskRunner.Modules.CommandModule
+  echo: Swarm.TaskRunner.Modules.EchoModule
+required-envs:
+  - TARGET_PATH
+
+steps:
+- module: command
+  label: command 1
+  file: powershell.exe
+  args:
+    - -Command
+    - dir
+    - ${TARGET_PATH}
+
+- module: command
+  label: command 2
+  file: powershell.exe
+  args: -Command dir ${TARGET_PATH}
+
+- module: "echo"
+  label: command 2
+  message: Hello World

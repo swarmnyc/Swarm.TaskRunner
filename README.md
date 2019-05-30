@@ -49,7 +49,7 @@ These are current supported modules:
     - Elements:
         - **file**: requested string, the path to the executable file, support env
         - **pwd**: optional string, the path of the working directory, support env, if this value is not provided, the runner will use the path of `--working-directory` or the current working directory.
-        - **args**: optional string array, support env
+        - **args**: optional string array or one string, support env
 
 3. Echo Module: show a message
     - Type Full Name: `Swarm.TaskRunner.Modules.CommandModule`
@@ -113,6 +113,7 @@ This project uses .net core and written in C#. For development, you need to
 ## Publish
 Use `dotnet publish` with runtime argument to generate stand-alone binaries.
 ```
+dotnet publish -c Release; # only dlls
 dotnet publish -c Release -r win-x64; # for windows
 dotnet publish -c Release -r osx-x64; # for mac
 dotnet publish -c Release -r linux-x64; # for mac

@@ -28,7 +28,7 @@ namespace Swarm.TaskRunner {
         ExecuteSteps();
         return 0;
       } catch (Exception ex) {
-        Logger.LogError("ERROR: Task failed by {0}", ex);
+        Logger.LogError("ERROR: {0}", ex);
 
         HandleOnError();
         return 1;
