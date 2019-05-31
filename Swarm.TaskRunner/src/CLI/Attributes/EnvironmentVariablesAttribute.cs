@@ -1,13 +1,14 @@
+using McMaster.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils.Conventions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using McMaster.Extensions.CommandLineUtils;
-using McMaster.Extensions.CommandLineUtils.Conventions;
 
 namespace Swarm.TaskRunner.CLI.Attributes {
   [AttributeUsage(AttributeTargets.Property)]
   class EnvironmentVariablesAttribute : Attribute, IMemberConvention, McMaster.Extensions.CommandLineUtils.Validation.IOptionValidator {
+
     public void Apply(ConventionContext context, MemberInfo member) {
       var opt = context.Application.Option("-e|--env", "Environment Variables, input like '-e NAME=foo -e EMAIL=foo@bar.com'", CommandOptionType.MultipleValue);
       opt.Validators.Add(this);

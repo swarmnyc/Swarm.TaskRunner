@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using Swarm.TaskRunner.Modules;
+using System.Collections.Generic;
 
 namespace Swarm.TaskRunner.Definitions {
-
   public class TaskDefinition {
     public string Label { get; set; }
     public string Version { get; set; }

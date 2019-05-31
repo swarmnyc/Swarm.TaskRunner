@@ -1,6 +1,6 @@
+using Swarm.TaskRunner.Definitions.Parser;
 using System;
 using System.IO;
-using Swarm.TaskRunner.Definitions.Parser;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Definitions {
@@ -16,6 +16,7 @@ namespace Swarm.TaskRunner.Definitions {
           switch (version) {
             case "1.0.0":
               return new TaskDefinitionParserV100().Parse(rootNode);
+
             default:
               throw new Exception($"{version} is not supported version");
           }

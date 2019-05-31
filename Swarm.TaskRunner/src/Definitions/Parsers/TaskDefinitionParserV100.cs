@@ -1,11 +1,12 @@
+using Swarm.TaskRunner.Modules;
 using System;
 using System.Collections.Generic;
-using Swarm.TaskRunner.Modules;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Definitions.Parser {
   public class TaskDefinitionParserV100 : ITaskDefinitionParser {
-    TaskDefinition definition;
+    private TaskDefinition definition;
+
     public TaskDefinition Parse(YamlMappingNode rootNode) {
       definition = new TaskDefinition();
       definition.Version = "1.0.0";
@@ -17,18 +18,23 @@ namespace Swarm.TaskRunner.Definitions.Parser {
             case "label":
               definition.Label = (string)node.Value;
               break;
+
             case "modules":
               ParseModules(node.Value);
               break;
+
             case "required-envs":
               ParseRequiredEnvs(node.Value);
               break;
+
             case "optional-envs":
               ParseOptionalEnv(node.Value);
               break;
+
             case "steps":
               ParseModuleDefinitions(definition.Steps, node.Value);
               break;
+
             case "onError":
               ParseModuleDefinitions(definition.OnError, node.Value);
               break;

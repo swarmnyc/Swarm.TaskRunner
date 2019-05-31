@@ -20,6 +20,6 @@ steps:
   file: powershell.exe
   args: -Command dir ${TARGET_PATH}
 
-- module: "echo"
+- module: echo
   label: command 2
   message: Hello World

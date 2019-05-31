@@ -32,6 +32,7 @@ namespace Swarm.TaskRunner.Tests {
       Assert.AreEqual($"Task Runner {version}", outStr);
       Assert.AreEqual("", errorStr);
     }
+
     [Test]
     public void FailIfNoArgTest() {
       var outStream = new MemoryStream();
@@ -49,10 +50,34 @@ namespace Swarm.TaskRunner.Tests {
       var outStr = new StreamReader(outStream).ReadToEnd().Trim();
       var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
 
-      Assert.AreEqual(1, exitCode);
+      Assert.AreEqual((int)ExitCode.CliFail, exitCode);
 
       Assert.AreEqual("Specify --help for a list of available options and commands.", outStr);
       Assert.AreEqual("The task definition field is required.", errorStr);
+    }
+
+    [Test]
+    public void FailIfMissingRequireEnv() {
+      var outStream = new MemoryStream();
+      var errorStream = new MemoryStream();
+      Console.SetOut(new StreamWriter(outStream));
+      Console.SetError(new StreamWriter(errorStream));
+
+      var path = Path.GetFullPath("../../../../example-definitions/example1.yml");
+      var exitCode = Program.Main(new string[] { path });
+      Console.Out.Flush();
+      Console.Error.Flush();
+
+      outStream.Position = 0;
+      errorStream.Position = 0;
+
+      var outStr = new StreamReader(outStream).ReadToEnd().Trim();
+      var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
+      Path.GetFullPath("../../../example-definitions/example.1.yml");
+      Assert.AreEqual((int)ExitCode.DefinitionFail, exitCode);
+
+      Assert.AreEqual("", outStr);
+      Assert.AreEqual("ERROR: Environment TARGET_PATH is required", errorStr);
     }
   }
 }

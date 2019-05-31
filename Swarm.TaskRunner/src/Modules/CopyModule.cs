@@ -1,10 +1,9 @@
-using System;
 using System.IO;
-using Swarm.TaskRunner.Definitions;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CopyModuleDefinition : ModuleDefinition {
+
     public CopyModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
     }
 
@@ -14,6 +13,7 @@ namespace Swarm.TaskRunner.Modules {
   }
 
   public class CopyModule : Module {
+
     public override ModuleDefinition Parse(string version, YamlMappingNode node) {
       return new CopyModuleDefinition(this, node) {
         SourcePath = (string)node.Children["source"],

@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Swarm.TaskRunner.Definitions;
-using YamlDotNet.RepresentationModel;
-using System.Linq;
-using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CommandModuleDefinition : ModuleDefinition {
+
     public CommandModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
     }
 

@@ -108,7 +108,8 @@ steps:
 This project uses .net core and written in C#. For development, you need to
 - Install .net core sdk
 - Use VS Code or VS or Rider IDE to develop
-- Use `dotnet run`
+- Use `dotnet run` to execute
+- Use `dotnet test` to execute unit tests
 
 ## Publish
 Use `dotnet publish` with runtime argument to generate stand-alone binaries.

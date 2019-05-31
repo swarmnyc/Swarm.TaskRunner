@@ -1,13 +1,14 @@
+using McMaster.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils.Conventions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using McMaster.Extensions.CommandLineUtils;
-using McMaster.Extensions.CommandLineUtils.Conventions;
 
 namespace Swarm.TaskRunner.CLI.Attributes {
   [AttributeUsage(AttributeTargets.Property)]
   class SkippedStepsAttribute : Attribute, IMemberConvention, McMaster.Extensions.CommandLineUtils.Validation.IOptionValidator {
+
     public void Apply(ConventionContext context, MemberInfo member) {
       var opt = context.Application.Option("-s|--skiped-steps <steps>", "The steps to skip, use comma to separate step number, like '1,2,3'", CommandOptionType.SingleValue);
       opt.Validators.Add(this);

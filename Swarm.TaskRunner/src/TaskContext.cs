@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace Swarm.TaskRunner {
   public class TaskContext {
-    private readonly Regex EnvRegex = new Regex(@"\$\{(\w+)\}");
+    private static readonly Regex EnvRegex = new Regex(@"\$\{(\w+)\}");
+    public string TaskDefinitionFilePath { get; internal set; }
     public string WorkingDirectory { get; set; }
     public Dictionary<int, bool> SkippedSteps { get; set; }
     public Dictionary<string, string> EnvironmentVariables { get; set; }
@@ -16,10 +17,12 @@ namespace Swarm.TaskRunner {
       foreach (Match m in EnvRegex.Matches(input)) {
         string key = m.Groups[1].Value;
         string value;
+        
         switch (key) {
           case "CWD":
             value = WorkingDirectory;
             break;
+
           default:
             EnvironmentVariables.TryGetValue(key, out value);
             break;

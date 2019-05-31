@@ -1,14 +1,9 @@
+using McMaster.Extensions.CommandLineUtils;
+using Swarm.TaskRunner.CLI.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using McMaster.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
-using System.Diagnostics;
-using Swarm.TaskRunner.Definitions;
-using Swarm.TaskRunner.CLI.Attributes;
 
 namespace Swarm.TaskRunner.CLI {
   [Command("runner", FullName = "Task Runner")]
@@ -37,28 +32,23 @@ namespace Swarm.TaskRunner.CLI {
     public bool IsVerbose { get; }
 
     private TaskExecuter executer;
+
     private int OnExecute() {
       Console.CancelKeyPress += OnExit;
 
       Logger.IsColorEnabled = !IsColorDisabled;
       Logger.IsVerbose = IsVerbose;
 
-      try {
-        var definition = TaskDefinitionParser.Parse(TaskDefinitionFilePath);
-        var context = new TaskContext() {
-          EnvironmentVariables = EnvironmentVariables,
-          SkippedSteps = SkippedSteps,
-          WorkingDirectory = WorkingDictionary ?? System.Environment.CurrentDirectory
-        };
+      var context = new TaskContext() {
+        TaskDefinitionFilePath = TaskDefinitionFilePath,
+        EnvironmentVariables = EnvironmentVariables,
+        SkippedSteps = SkippedSteps,
+        WorkingDirectory = WorkingDictionary ?? Environment.CurrentDirectory
+      };
 
-        executer = new TaskExecuter(context, definition);
+      executer = new TaskExecuter(context);
 
-        return executer.Execute();
-      } catch (Exception ex) {
-        Logger.LogError("ERROR: {0}", ex);
-
-        return 1;
-      }
+      return executer.Execute();
     }
 
     private void OnExit(object sender, EventArgs e) {

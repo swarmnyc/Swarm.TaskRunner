@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Swarm.TaskRunner.Definitions;
 
 namespace Swarm.TaskRunner {
   public static class Logger {
@@ -11,7 +8,6 @@ namespace Swarm.TaskRunner {
     public static void LogInfo(string message) {
       Console.WriteLine(message);
     }
-
 
     public static void LogHint(string message) {
       if (IsColorEnabled) {
@@ -46,15 +42,15 @@ namespace Swarm.TaskRunner {
 
       if (IsColorEnabled) {
         Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine(message, errorMessage);
+        Console.Error.WriteLine(message, errorMessage);
 
         if (IsVerbose && error != null) {
-          Console.WriteLine(error.ToString());
+          Console.Error.WriteLine(error.ToString());
         }
 
         Console.ResetColor();
       } else {
-        Console.WriteLine(message, errorMessage);
+        Console.Error.WriteLine(message, errorMessage);
       }
     }
   }
