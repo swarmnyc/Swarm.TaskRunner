@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.IO;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CopyModuleDefinition : ModuleDefinition {
+    public CopyModuleDefinition(Module module) : base(module) {
+    }
 
     public CopyModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
     }
@@ -35,6 +38,8 @@ namespace Swarm.TaskRunner.Modules {
         Directory.CreateDirectory(target);
       }
 
+      var checkedDir = new HashSet<string>();
+
       foreach (var path in Directory.EnumerateFileSystemEntries(source, pattern, SearchOption.AllDirectories)) {
         FileAttributes attr = File.GetAttributes(path);
         var newPath = path.Replace(source, target);
@@ -49,6 +54,14 @@ namespace Swarm.TaskRunner.Modules {
         } else {
           if (Logger.IsVerbose) {
             Logger.LogInfo($"COPY {newPath}");
+          }
+
+          // if dir not checked or not exist, create it
+          var dir = Path.GetDirectoryName(newPath);
+
+          if (!(checkedDir.Contains(dir) || Directory.Exists(dir))) {
+            checkedDir.Add(dir);
+            Directory.CreateDirectory(dir);
           }
 
           if (File.Exists(newPath)) {

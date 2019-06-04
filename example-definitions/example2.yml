@@ -1,0 +1,14 @@
+version: "1.0.0"
+label: for test on error
+modules:
+  command: Swarm.TaskRunner.Modules.CommandModule
+  test: Swarm.TaskRunner.Tests.TestModule, Swarm.TaskRunner.Tests
+
+steps:
+- module: command
+  label: wrong command
+  file: no-file
+
+onError:
+- module: test
+  label: onError get called

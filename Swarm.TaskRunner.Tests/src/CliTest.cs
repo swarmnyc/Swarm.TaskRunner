@@ -1,14 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Swarm.TaskRunner;
 
 namespace Swarm.TaskRunner.Tests {
-  public class CliTests {
-    [SetUp]
-    public void Setup() {
-    }
-
+  public class CliTest {
     [Test]
     public void ShowHelpTest() {
       var outStream = new MemoryStream();
@@ -73,11 +70,26 @@ namespace Swarm.TaskRunner.Tests {
 
       var outStr = new StreamReader(outStream).ReadToEnd().Trim();
       var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
-      Path.GetFullPath("../../../example-definitions/example.1.yml");
       Assert.AreEqual((int)ExitCode.DefinitionFail, exitCode);
 
       Assert.AreEqual("", outStr);
       Assert.AreEqual("ERROR: Environment TARGET_PATH is required", errorStr);
+    }
+
+    [Test]
+    public void SuccessWithRequireEnv() {
+      var errorStream = new MemoryStream();
+      Console.SetError(new StreamWriter(errorStream));
+
+      var path = Path.GetFullPath("../../../../example-definitions/example1.yml");
+      var exitCode = Program.Main(new string[] { path, "-e", "TARGET_PATH=./" });
+      Console.Out.Flush();
+      Console.Error.Flush();
+
+      errorStream.Position = 0;
+
+      var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
+      Assert.AreEqual((int)ExitCode.Success, exitCode);
     }
   }
 }

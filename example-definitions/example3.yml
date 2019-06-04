@@ -1,0 +1,12 @@
+version: "1.0.0"
+label: for test success
+modules:
+  test: Swarm.TaskRunner.Tests.TestModule, Swarm.TaskRunner.Tests
+
+steps:
+- module: test
+  label: call 1
+- module: test
+  label: call 2
+- module: test
+  label: call 3
