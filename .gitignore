@@ -1,6 +1,7 @@
 **/.vs
 **/bin
 **/obj
+**/nupkg
 *.csproj.user
 
 .DS_Store

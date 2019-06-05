@@ -5,7 +5,7 @@ namespace Swarm.TaskRunner.Modules {
 
     public abstract ModuleDefinition Parse(string version, YamlMappingNode node);
 
-    public abstract void Execute(TaskContext context, ModuleDefinition ModuleDefinition);
+    public abstract void Execute(TaskContext context, ModuleDefinition definition);
 
     public virtual void Abort() {
     }

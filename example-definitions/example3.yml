@@ -6,7 +6,10 @@ modules:
 steps:
 - module: test
   label: call 1
+  arg: 1
 - module: test
   label: call 2
+  arg: 2
 - module: test
   label: call 3
+  arg: 3 

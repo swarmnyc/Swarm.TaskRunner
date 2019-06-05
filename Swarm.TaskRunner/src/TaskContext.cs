@@ -7,17 +7,18 @@ namespace Swarm.TaskRunner {
     private static readonly Regex EnvRegex = new Regex(@"\$\{(\w+)\}");
     public string TaskDefinitionFilePath { get; internal set; }
     public string WorkingDirectory { get; set; }
-    public Dictionary<int, bool> SkippedSteps { get; set; }
+    public HashSet<int> SkippedSteps { get; set; }
     public Dictionary<string, string> EnvironmentVariables { get; set; }
 
     /**
     Geting value from EnvironmentVariables, if the string contain ${name}
-     */
+    */
     public string GetValue(string input) {
-      foreach (Match m in EnvRegex.Matches(input)) {
+      Match m;
+      while ((m = EnvRegex.Match(input)).Success) {
         string key = m.Groups[1].Value;
         string value;
-        
+
         switch (key) {
           case "CWD":
             value = WorkingDirectory;
@@ -29,10 +30,10 @@ namespace Swarm.TaskRunner {
         }
 
         if (value == null) {
-          throw new Exception($"{m.Value} is not found");
+          throw new Exception($"Environment Variable \"{key}\" is not found");
         }
 
-        input = EnvRegex.Replace(input, value);
+        input = input.Replace(m.Value, value);
       }
 
       return input;

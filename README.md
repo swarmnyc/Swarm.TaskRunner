@@ -7,6 +7,11 @@ The features are:
 - Extendable: it can be extended by add other modules.
 - Human Readable: the tasks are defined in yaml format.
 
+## Install
+[Download the right release](https://github.com/swarmnyc/Swarm.TaskRunner/releases) for your needs.
+
+> NOTE: we will publish the github registry once we get accepted.
+
 ## Usage
 Run `runner --help` to see the usage.
 ![usage](./screenshots/usage.png)
@@ -21,7 +26,7 @@ The definition is written by yaml
 - **version**: requested string, currently only "1.0.0"
 - **label**: optional string, it presents on log
 - **modules**: optional object
-    - **module-name**: dotnet class full name like "copy: Swarm.TaskRunner.Steps.CopyModule"
+    - **module-name**: dotnet class full name like "copy: Swarm.TaskRunner.Steps.CopyModule" or "copy: Swarm.TaskRunner.Steps.CopyModule, Swarm.TaskRunner" the assembly name can be 
 - **required-envs**: optional string array, like "- ENV_NAME"
 - **optional-envs**: optional object array
     - -**name**: the name of env
@@ -75,7 +80,7 @@ modules:
   command: Swarm.TaskRunner.Modules.CommandModule
   request: Swarm.TaskRunner.Modules.RequestModule
   copy: Swarm.TaskRunner.Modules.CopyModule
-  echo: Swarm.TaskRunner.Modules.EchoModule
+  echo: Swarm.TaskRunner.Modules.EchoModule, Swarm.TaskRunner
 required-envs:
   - "SOURCE_PATH"
 optional-envs:
@@ -120,3 +125,16 @@ dotnet publish -c Release -r osx-x64; # for mac
 dotnet publish -c Release -r linux-x64; # for mac
 ```
 You can see other runtime on [this document](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
+
+## Build As DotNet Tool
+Runner supports dotnet tool. 
+```bash
+# pack the NuGet package
+dotnet pack ./Swarm.TaskRunner/Swarm.TaskRunner.csproj -c Tool
+
+# install runner from local folder
+dotnet tool install --global --add-source ./Swarm.TaskRunner/nupkg runner
+
+# test
+runner -h
+```

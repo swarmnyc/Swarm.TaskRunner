@@ -16,13 +16,13 @@ namespace Swarm.TaskRunner.CLI.Attributes {
       context.Application.OnParsingComplete(_ => {
         var value = opt.Value();
         if (value != null) {
-          var skippedSteps = (member as PropertyInfo).GetValue(context.ModelAccessor.GetModel()) as Dictionary<int, bool>;
+          var skippedSteps = (member as PropertyInfo).GetValue(context.ModelAccessor.GetModel()) as HashSet<int>;
           var numbers = value.Split(',');
           foreach (var number in numbers) {
             int index;
             if (int.TryParse(number.Trim(), out index)) {
               // step is zero-based
-              skippedSteps[index - 1] = true;
+              skippedSteps.Add(index - 1);
             }
           }
         }

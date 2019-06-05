@@ -12,7 +12,7 @@ namespace Swarm.TaskRunner.Tests {
       var module = new CopyModule();
       var context = new TaskContext() {
         EnvironmentVariables = new Dictionary<string, string>(),
-        SkippedSteps = new Dictionary<int, bool>(),
+        SkippedSteps = new HashSet<int>(),
         WorkingDirectory = Environment.CurrentDirectory
       };
 

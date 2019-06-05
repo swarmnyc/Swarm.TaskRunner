@@ -23,7 +23,7 @@ namespace Swarm.TaskRunner.CLI {
     public Dictionary<string, string> EnvironmentVariables { get; } = new Dictionary<string, string>();
 
     [SkippedSteps]
-    public Dictionary<int, bool> SkippedSteps { get; } = new Dictionary<int, bool>();
+    public HashSet<int> SkippedSteps { get; } = new HashSet<int>();
 
     [Option("--no-color", Description = "If apply, disable colorful output")]
     public bool IsColorDisabled { get; }

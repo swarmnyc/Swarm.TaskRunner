@@ -71,8 +71,7 @@ namespace Swarm.TaskRunner {
       foreach (var (step, index) in Definition.Steps.Select((step, index) => (step, index))) {
         if (IsAborted) return;
 
-        bool isSkipped;
-        if (Context.SkippedSteps.TryGetValue(index, out isSkipped) && isSkipped) {
+        if (Context.SkippedSteps.Contains(index)) {
           if (step.Label == null) {
             Logger.LogHint($"\n[{index + 1}/{Definition.Steps.Count}] skipped");
           } else {
