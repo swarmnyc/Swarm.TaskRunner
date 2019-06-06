@@ -4,6 +4,7 @@ using System.Text;
 namespace Swarm.TaskRunner.Logging {
   public class StringBuilderLogger : LogProvider {
     public StringBuilder Out { get; set; } = new StringBuilder();
+
     public StringBuilder Error { get; set; } = new StringBuilder();
 
     public override void LogInfo(string message) {
@@ -28,7 +29,7 @@ namespace Swarm.TaskRunner.Logging {
     public override void LogError(string message, Exception error = null) {
       string errorMessage;
       if (error == null) {
-        errorMessage = "";
+        errorMessage = string.Empty;
       } else {
         errorMessage = error.Message;
         if (error.InnerException != null) {
@@ -42,7 +43,5 @@ namespace Swarm.TaskRunner.Logging {
         Error.AppendLine(error.ToString());
       }
     }
-
-
   }
 }

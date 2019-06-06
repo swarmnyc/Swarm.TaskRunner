@@ -13,7 +13,9 @@ namespace Swarm.TaskRunner {
     }
 
     public bool IsAborted { get; private set; }
+
     public TaskContext Context { get; private set; }
+
     public TaskDefinition Definition { get; private set; }
 
     public int Execute() {
@@ -48,6 +50,15 @@ namespace Swarm.TaskRunner {
       }
     }
 
+    internal void Abort() {
+      IsAborted = true;
+      if (currentStep != null) {
+        currentStep.Module.Abort();
+        currentStep = null;
+        Console.WriteLine("Aborted");
+      }
+    }
+
     private void PrepareWorkingDirectory() {
       if (!Directory.Exists(Context.WorkingDirectory)) {
         Directory.CreateDirectory(Context.WorkingDirectory);
@@ -69,7 +80,9 @@ namespace Swarm.TaskRunner {
     private void ExecuteSteps() {
       var time = DateTime.Now;
       foreach (var (step, index) in Definition.Steps.Select((step, index) => (step, index))) {
-        if (IsAborted) return;
+        if (IsAborted) {
+          return;
+        }
 
         if (Context.SkippedSteps.Contains(index)) {
           if (step.Label == null) {
@@ -77,6 +90,7 @@ namespace Swarm.TaskRunner {
           } else {
             Logger.LogHint($"\n[{index + 1}/{Definition.Steps.Count}] {step.Label} is skipped");
           }
+
           continue;
         }
 
@@ -102,15 +116,6 @@ namespace Swarm.TaskRunner {
         }
       } catch (Exception ex) {
         Logger.LogError("ERROR: handle onError failed by {0}", ex);
-      }
-    }
-
-    internal void Abort() {
-      IsAborted = true;
-      if (currentStep != null) {
-        currentStep.Module.Abort();
-        currentStep = null;
-        Console.WriteLine("Aborted");
       }
     }
   }

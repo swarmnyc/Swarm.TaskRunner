@@ -9,9 +9,7 @@ namespace Swarm.TaskRunner.CLI {
   [Command("runner", FullName = "Task Runner")]
   [VersionOptionFromMember("-v|--version", MemberName = nameof(GetVersion))]
   public class MainCommand {
-    private static string GetVersion() {
-      return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-    }
+    private TaskExecuter executer;
 
     [Argument(0, "task definition", Description = "The yml file path of the task definition"), Required, FileExists]
     public string TaskDefinitionFilePath { get; }
@@ -31,8 +29,6 @@ namespace Swarm.TaskRunner.CLI {
     [Option("--verbose", Description = "If apply, output detail")]
     public bool IsVerbose { get; }
 
-    private TaskExecuter executer;
-
     internal int OnExecute() {
       Console.CancelKeyPress += OnExit;
 
@@ -49,6 +45,10 @@ namespace Swarm.TaskRunner.CLI {
       executer = new TaskExecuter(context);
 
       return executer.Execute();
+    }
+
+    private static string GetVersion() {
+      return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 
     private void OnExit(object sender, EventArgs e) {

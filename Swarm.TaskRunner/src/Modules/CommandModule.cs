@@ -7,20 +7,7 @@ using System.Runtime.InteropServices;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
-  public class CommandModuleDefinition : ModuleDefinition {
-    public CommandModuleDefinition(IModule module) : base(module) {
-    }
-
-    public CommandModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
-    }
-
-    public string FilePath { get; set; }
-    public string WorkingDirectory { get; set; }
-    public string Arguments { get; set; }
-    public IList<string> ArgumentList { get; } = new List<string>();
-  }
-
-  public class CommandModule : Module<CommandModuleDefinition> {
+  public sealed class CommandModule : Module<CommandModuleDefinition>, IDisposable {
     private Process process;
 
     public override CommandModuleDefinition Parse(string version, YamlMappingNode node) {
@@ -64,7 +51,7 @@ namespace Swarm.TaskRunner.Modules {
 
       if (definition.Arguments == null) {
         var arguments = definition.ArgumentList.Select(a => context.GetValue(a));
-        startInfo.Arguments = String.Join(" ", arguments);
+        startInfo.Arguments = string.Join(" ", arguments);
       } else {
         startInfo.Arguments = context.GetValue(definition.Arguments);
       }
@@ -83,7 +70,9 @@ namespace Swarm.TaskRunner.Modules {
         process.StartInfo = startInfo;
 
         process.OutputDataReceived += (sender, e) => {
-          if (!Logger.IsVerbose) return;
+          if (!Logger.IsVerbose) {
+            return;
+          }
 
           if (e.Data != null && e.Data.Length > 0) {
             Logger.LogInfo(e.Data);
@@ -115,14 +104,14 @@ namespace Swarm.TaskRunner.Modules {
     public override void Abort() {
       if (process != null) {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-          Process.Start(new ProcessStartInfo {
+          Process.Start(new ProcessStartInfo() {
             FileName = "taskkill",
             Arguments = $"/PID {process.Id} /f /t",
             CreateNoWindow = true,
             UseShellExecute = false
           });
         } else {
-          Process.Start(new ProcessStartInfo {
+          Process.Start(new ProcessStartInfo() {
             FileName = "kill",
             Arguments = $"-TERM {process.Id}",
             CreateNoWindow = true,
@@ -134,5 +123,26 @@ namespace Swarm.TaskRunner.Modules {
         process = null;
       }
     }
+
+    public void Dispose() {
+      process.Close();
+      process = null;
+    }
+  }
+
+  public class CommandModuleDefinition : ModuleDefinition {
+    public CommandModuleDefinition(IModule module) : base(module) {
+    }
+
+    public CommandModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+    }
+
+    public string FilePath { get; set; }
+
+    public string WorkingDirectory { get; set; }
+
+    public string Arguments { get; set; }
+
+    public IList<string> ArgumentList { get; } = new List<string>();
   }
 }

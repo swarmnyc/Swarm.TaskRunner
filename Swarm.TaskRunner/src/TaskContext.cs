@@ -5,9 +5,13 @@ using System.Text.RegularExpressions;
 namespace Swarm.TaskRunner {
   public class TaskContext {
     private static readonly Regex EnvRegex = new Regex(@"\$\{(\w+)\}");
+
     public string TaskDefinitionFilePath { get; internal set; }
+
     public string WorkingDirectory { get; set; }
+
     public HashSet<int> SkippedSteps { get; set; }
+
     public Dictionary<string, string> EnvironmentVariables { get; set; }
 
     /**

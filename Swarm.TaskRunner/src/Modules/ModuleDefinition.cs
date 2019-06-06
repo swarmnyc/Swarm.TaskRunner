@@ -14,6 +14,7 @@ namespace Swarm.TaskRunner.Modules {
     }
 
     public IModule Module { get; }
+
     public string Label { get; set; }
   }
 }

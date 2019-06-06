@@ -3,20 +3,7 @@ using System.IO;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
-  public class CopyModuleDefinition : ModuleDefinition {
-    public CopyModuleDefinition(IModule module) : base(module) {
-    }
-
-    public CopyModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
-    }
-
-    public string SourcePath { get; set; }
-    public string TargetPath { get; set; }
-    public string Pattern { get; set; }
-  }
-
   public class CopyModule : Module<CopyModuleDefinition> {
-
     public override CopyModuleDefinition Parse(string version, YamlMappingNode node) {
       return new CopyModuleDefinition(this, node) {
         SourcePath = (string)node.Children["source"],
@@ -32,7 +19,7 @@ namespace Swarm.TaskRunner.Modules {
 
       Logger.LogInfo($"Copy files from '{source}' to '{target}' with pattern '{pattern}'");
 
-      //check target directory
+      // check target directory
       if (!Directory.Exists(target)) {
         Directory.CreateDirectory(target);
       }
@@ -75,11 +62,25 @@ namespace Swarm.TaskRunner.Modules {
     private static string GetDirectoryFullPath(string path) {
       var fullpath = Path.GetFullPath(path);
 
-      if (!fullpath.EndsWith(Path.DirectorySeparatorChar.ToString())) {
+      if (!fullpath.EndsWith(Path.DirectorySeparatorChar)) {
         fullpath += Path.DirectorySeparatorChar;
       }
 
       return fullpath;
     }
+  }
+
+  public class CopyModuleDefinition : ModuleDefinition {
+    public CopyModuleDefinition(IModule module) : base(module) {
+    }
+
+    public CopyModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+    }
+
+    public string SourcePath { get; set; }
+
+    public string TargetPath { get; set; }
+
+    public string Pattern { get; set; }
   }
 }

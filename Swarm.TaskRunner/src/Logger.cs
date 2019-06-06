@@ -3,14 +3,13 @@ using Swarm.TaskRunner.Logging;
 
 namespace Swarm.TaskRunner {
   public static class Logger {
-    private static LogProvider DefaultLogger { get; set; } = new ConsoleLogger();
-
     public static LogProvider LogProvider { get; set; } = DefaultLogger;
 
     public static bool IsColorEnabled {
       get {
         return LogProvider.IsColorEnabled;
       }
+
       set {
         LogProvider.IsColorEnabled = value;
       }
@@ -20,10 +19,13 @@ namespace Swarm.TaskRunner {
       get {
         return LogProvider.IsVerbose;
       }
+
       set {
         LogProvider.IsVerbose = value;
       }
     }
+
+    private static LogProvider DefaultLogger { get; set; } = new ConsoleLogger();
 
     public static void LogInfo(string message) {
       LogProvider.LogInfo(message);

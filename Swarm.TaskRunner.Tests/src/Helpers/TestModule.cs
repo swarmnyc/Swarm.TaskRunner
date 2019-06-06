@@ -4,13 +4,6 @@ using Swarm.TaskRunner.Modules;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Tests {
-  public class TestModuleDefinition : ModuleDefinition {
-    public string Arg { get; set; }
-
-    public TestModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
-    }
-  }
-
   public class TestModule : Module<TestModuleDefinition> {
     public int CallCount { get; set; }
 
@@ -33,5 +26,12 @@ namespace Swarm.TaskRunner.Tests {
         CallArgs.Add(definition.Arg);
       }
     }
+  }
+
+  public class TestModuleDefinition : ModuleDefinition {
+    public TestModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+    }
+
+    public string Arg { get; set; }
   }
 }

@@ -29,7 +29,7 @@ namespace Swarm.TaskRunner.Logging {
     public override void LogError(string message, Exception error = null) {
       string errorMessage;
       if (error == null) {
-        errorMessage = "";
+        errorMessage = string.Empty;
       } else {
         errorMessage = error.Message;
         if (error.InnerException != null) {

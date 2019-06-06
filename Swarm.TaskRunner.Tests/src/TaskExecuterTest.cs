@@ -10,8 +10,8 @@ namespace Swarm.TaskRunner.Tests {
     public void EnvTest() {
       var context = new TaskContext() {
         EnvironmentVariables = new Dictionary<string, string>() {
-          {"A", "aa"},
-          {"B", "bb"}
+          { "A", "aa" },
+          { "B", "bb" }
         }
       };
 
@@ -22,8 +22,8 @@ namespace Swarm.TaskRunner.Tests {
     public void EnvMissingTest() {
       try {
         var context = new TaskContext() {
-          EnvironmentVariables = new Dictionary<string, string>(){
-            {"A", "aa"}
+          EnvironmentVariables = new Dictionary<string, string>() {
+            { "A", "aa" }
           }
         };
 

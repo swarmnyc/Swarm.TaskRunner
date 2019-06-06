@@ -27,7 +27,7 @@ namespace Swarm.TaskRunner.Tests {
 
       var version = typeof(Program).Assembly.GetName().Version.ToString(3);
       Assert.AreEqual($"Task Runner {version}", outStr);
-      Assert.AreEqual("", errorStr);
+      Assert.AreEqual(string.Empty, errorStr);
     }
 
     [Test]
@@ -37,7 +37,7 @@ namespace Swarm.TaskRunner.Tests {
       Console.SetOut(new StreamWriter(outStream));
       Console.SetError(new StreamWriter(errorStream));
 
-      var exitCode = Program.Main(new string[] { });
+      var exitCode = Program.Main(Array.Empty<string>());
       Console.Out.Flush();
       Console.Error.Flush();
 
@@ -72,7 +72,7 @@ namespace Swarm.TaskRunner.Tests {
       var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
       Assert.AreEqual((int)ExitCode.DefinitionFail, exitCode);
 
-      Assert.AreEqual("", outStr);
+      Assert.AreEqual(string.Empty, outStr);
       Assert.AreEqual("ERROR: Environment TARGET_PATH is required", errorStr);
     }
 
