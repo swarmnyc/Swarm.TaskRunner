@@ -1,57 +1,48 @@
 using System;
+using Swarm.TaskRunner.Logging;
 
 namespace Swarm.TaskRunner {
   public static class Logger {
-    public static bool IsColorEnabled { get; set; }
-    public static bool IsVerbose { get; set; }
+    private static LogProvider DefaultLogger { get; set; } = new ConsoleLogger();
+
+    public static LogProvider LogProvider { get; set; } = DefaultLogger;
+
+    public static bool IsColorEnabled {
+      get {
+        return LogProvider.IsColorEnabled;
+      }
+      set {
+        LogProvider.IsColorEnabled = value;
+      }
+    }
+
+    public static bool IsVerbose {
+      get {
+        return LogProvider.IsVerbose;
+      }
+      set {
+        LogProvider.IsVerbose = value;
+      }
+    }
 
     public static void LogInfo(string message) {
-      Console.WriteLine(message);
+      LogProvider.LogInfo(message);
     }
 
     public static void LogHint(string message) {
-      if (IsColorEnabled) {
-        Console.ForegroundColor = ConsoleColor.DarkBlue;
-        Console.WriteLine(message);
-        Console.ResetColor();
-      } else {
-        Console.WriteLine(message);
-      }
+      LogProvider.LogHint(message);
     }
 
     public static void LogWarning(string message) {
-      if (IsColorEnabled) {
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine(message);
-        Console.ResetColor();
-      } else {
-        Console.WriteLine(message);
-      }
+      LogProvider.LogWarning(message);
     }
 
     public static void LogError(string message, Exception error = null) {
-      string errorMessage;
-      if (error == null) {
-        errorMessage = "";
-      } else {
-        errorMessage = error.Message;
-        if (error.InnerException != null) {
-          errorMessage += ", " + error.InnerException.Message;
-        }
-      }
+      LogProvider.LogError(message, error);
+    }
 
-      if (IsColorEnabled) {
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.Error.WriteLine(message, errorMessage);
-
-        if (IsVerbose && error != null) {
-          Console.Error.WriteLine(error.ToString());
-        }
-
-        Console.ResetColor();
-      } else {
-        Console.Error.WriteLine(message, errorMessage);
-      }
+    public static void ResetProvider() {
+      LogProvider = DefaultLogger;
     }
   }
 }

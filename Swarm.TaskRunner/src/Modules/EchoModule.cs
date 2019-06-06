@@ -3,24 +3,22 @@ using YamlDotNet.RepresentationModel;
 namespace Swarm.TaskRunner.Modules {
   public class EchoModuleDefinition : ModuleDefinition {
 
-    public EchoModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
+    public EchoModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
     }
 
     public string Message { get; set; }
   }
 
-  public class EchoModule : Module {
+  public class EchoModule : Module<EchoModuleDefinition> {
 
-    public override ModuleDefinition Parse(string version, YamlMappingNode node) {
+    public override EchoModuleDefinition Parse(string version, YamlMappingNode node) {
       return new EchoModuleDefinition(this, node) {
         Message = (string)node.Children["message"]
       };
     }
 
-    public override void Execute(TaskContext context, ModuleDefinition definition) {
-      var def = definition as EchoModuleDefinition;
-
-      Logger.LogInfo(context.GetValue(def.Message));
+    public override void Execute(TaskContext context, EchoModuleDefinition definition) {
+      Logger.LogInfo(context.GetValue(definition.Message));
     }
   }
 }

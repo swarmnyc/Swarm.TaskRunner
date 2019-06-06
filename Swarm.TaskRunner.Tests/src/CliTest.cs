@@ -78,17 +78,9 @@ namespace Swarm.TaskRunner.Tests {
 
     [Test]
     public void SuccessWithRequireEnv() {
-      var errorStream = new MemoryStream();
-      Console.SetError(new StreamWriter(errorStream));
-
       var path = Path.GetFullPath("../../../../example-definitions/example1.yml");
       var exitCode = Program.Main(new string[] { path, "-e", "TARGET_PATH=./" });
-      Console.Out.Flush();
-      Console.Error.Flush();
 
-      errorStream.Position = 0;
-
-      var errorStr = new StreamReader(errorStream).ReadToEnd().Trim();
       Assert.AreEqual((int)ExitCode.Success, exitCode);
     }
   }

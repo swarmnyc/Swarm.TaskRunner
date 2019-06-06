@@ -4,10 +4,10 @@ using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CopyModuleDefinition : ModuleDefinition {
-    public CopyModuleDefinition(Module module) : base(module) {
+    public CopyModuleDefinition(IModule module) : base(module) {
     }
 
-    public CopyModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
+    public CopyModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
     }
 
     public string SourcePath { get; set; }
@@ -15,9 +15,9 @@ namespace Swarm.TaskRunner.Modules {
     public string Pattern { get; set; }
   }
 
-  public class CopyModule : Module {
+  public class CopyModule : Module<CopyModuleDefinition> {
 
-    public override ModuleDefinition Parse(string version, YamlMappingNode node) {
+    public override CopyModuleDefinition Parse(string version, YamlMappingNode node) {
       return new CopyModuleDefinition(this, node) {
         SourcePath = (string)node.Children["source"],
         TargetPath = (string)node.Children["target"],
@@ -25,11 +25,10 @@ namespace Swarm.TaskRunner.Modules {
       };
     }
 
-    public override void Execute(TaskContext context, ModuleDefinition definition) {
-      var def = definition as CopyModuleDefinition;
-      var source = getDirectoryFullPath(context.GetValue(def.SourcePath));
-      var target = getDirectoryFullPath(context.GetValue(def.TargetPath));
-      var pattern = context.GetValue(def.Pattern);
+    public override void Execute(TaskContext context, CopyModuleDefinition definition) {
+      var source = GetDirectoryFullPath(context.GetValue(definition.SourcePath));
+      var target = GetDirectoryFullPath(context.GetValue(definition.TargetPath));
+      var pattern = context.GetValue(definition.Pattern);
 
       Logger.LogInfo($"Copy files from '{source}' to '{target}' with pattern '{pattern}'");
 
@@ -73,7 +72,7 @@ namespace Swarm.TaskRunner.Modules {
       }
     }
 
-    private static string getDirectoryFullPath(string path) {
+    private static string GetDirectoryFullPath(string path) {
       var fullpath = Path.GetFullPath(path);
 
       if (!fullpath.EndsWith(Path.DirectorySeparatorChar.ToString())) {

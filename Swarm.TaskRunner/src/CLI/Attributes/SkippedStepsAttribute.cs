@@ -19,8 +19,7 @@ namespace Swarm.TaskRunner.CLI.Attributes {
           var skippedSteps = (member as PropertyInfo).GetValue(context.ModelAccessor.GetModel()) as HashSet<int>;
           var numbers = value.Split(',');
           foreach (var number in numbers) {
-            int index;
-            if (int.TryParse(number.Trim(), out index)) {
+            if (int.TryParse(number.Trim(), out int index)) {
               // step is zero-based
               skippedSteps.Add(index - 1);
             }
@@ -35,8 +34,7 @@ namespace Swarm.TaskRunner.CLI.Attributes {
         var numbers = value.Split(',');
 
         foreach (var number in numbers) {
-          int index;
-          if (!int.TryParse(number.Trim(), out index)) {
+          if (!int.TryParse(number.Trim(), out int index)) {
             return new ValidationResult($"Invalid step for '{number}'");
           }
         }

@@ -33,7 +33,7 @@ namespace Swarm.TaskRunner.CLI {
 
     private TaskExecuter executer;
 
-    private int OnExecute() {
+    internal int OnExecute() {
       Console.CancelKeyPress += OnExit;
 
       Logger.IsColorEnabled = !IsColorDisabled;

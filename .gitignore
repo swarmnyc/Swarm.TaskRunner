@@ -2,6 +2,7 @@
 **/bin
 **/obj
 **/nupkg
+**/TestResults
 *.csproj.user
 
 .DS_Store

@@ -8,8 +8,10 @@ using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CommandModuleDefinition : ModuleDefinition {
+    public CommandModuleDefinition(IModule module) : base(module) {
+    }
 
-    public CommandModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
+    public CommandModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
     }
 
     public string FilePath { get; set; }
@@ -18,12 +20,13 @@ namespace Swarm.TaskRunner.Modules {
     public IList<string> ArgumentList { get; } = new List<string>();
   }
 
-  public class CommandModule : Module {
-    public Process process;
+  public class CommandModule : Module<CommandModuleDefinition> {
+    private Process process;
 
-    public override ModuleDefinition Parse(string version, YamlMappingNode node) {
-      var definition = new CommandModuleDefinition(this, node);
-      definition.FilePath = (string)node.Children["file"];
+    public override CommandModuleDefinition Parse(string version, YamlMappingNode node) {
+      var definition = new CommandModuleDefinition(this, node) {
+        FilePath = (string)node.Children["file"]
+      };
 
       if (node.Children.ContainsKey("pwd")) {
         definition.WorkingDirectory = (string)node.Children["pwd"];
@@ -34,8 +37,7 @@ namespace Swarm.TaskRunner.Modules {
         if (child is YamlScalarNode) {
           definition.Arguments = (string)child;
         } else {
-          var args = node.Children["args"] as YamlSequenceNode;
-          if (args != null) {
+          if (node.Children["args"] is YamlSequenceNode args) {
             foreach (var item in args) {
               definition.ArgumentList.Add((string)item);
             }
@@ -46,27 +48,25 @@ namespace Swarm.TaskRunner.Modules {
       return definition;
     }
 
-    public override void Execute(TaskContext context, ModuleDefinition definition) {
-      var def = definition as CommandModuleDefinition;
-
+    public override void Execute(TaskContext context, CommandModuleDefinition definition) {
       ProcessStartInfo startInfo = new ProcessStartInfo();
-      string filepath = context.GetValue(def.FilePath);
+      string filepath = context.GetValue(definition.FilePath);
       if (filepath.StartsWith(".")) {
         filepath = Path.GetFullPath(filepath);
       }
 
       startInfo.FileName = filepath;
-      if (def.WorkingDirectory == null) {
+      if (definition.WorkingDirectory == null) {
         startInfo.WorkingDirectory = context.WorkingDirectory;
       } else {
-        startInfo.WorkingDirectory = context.GetValue(def.WorkingDirectory);
+        startInfo.WorkingDirectory = context.GetValue(definition.WorkingDirectory);
       }
 
-      if (def.Arguments == null) {
-        var arguments = def.ArgumentList.Select(a => context.GetValue(a));
+      if (definition.Arguments == null) {
+        var arguments = definition.ArgumentList.Select(a => context.GetValue(a));
         startInfo.Arguments = String.Join(" ", arguments);
       } else {
-        startInfo.Arguments = context.GetValue(def.Arguments);
+        startInfo.Arguments = context.GetValue(definition.Arguments);
       }
 
       foreach (var item in context.EnvironmentVariables) {

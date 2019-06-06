@@ -8,8 +8,9 @@ namespace Swarm.TaskRunner.Definitions.Parser {
     private TaskDefinition definition;
 
     public TaskDefinition Parse(YamlMappingNode rootNode) {
-      definition = new TaskDefinition();
-      definition.Version = "1.0.0";
+      definition = new TaskDefinition {
+        Version = "1.0.0"
+      };
 
       foreach (var node in rootNode.Children) {
         var name = (string)node.Key;
@@ -58,11 +59,11 @@ namespace Swarm.TaskRunner.Definitions.Parser {
           throw new Exception($"Cannot find {typeName} module");
         }
 
-        if (!typeof(Module).IsAssignableFrom(type)) {
+        if (!typeof(IModule).IsAssignableFrom(type)) {
           throw new Exception($"{typeName} is not inherited from Module");
         }
 
-        var instance = Activator.CreateInstance(type) as Module;
+        var instance = Activator.CreateInstance(type) as IModule;
 
         definition.Modules[name] = instance;
       }
@@ -101,8 +102,7 @@ namespace Swarm.TaskRunner.Definitions.Parser {
       if (node is YamlSequenceNode items) {
         foreach (YamlMappingNode item in items) {
           var moduleName = (string)item.Children["module"];
-          Module module;
-          if (definition.Modules.TryGetValue(moduleName, out module)) {
+          if (definition.Modules.TryGetValue(moduleName, out IModule module)) {
             var def = module.Parse(definition.Version, item);
             list.Add(def);
           } else {

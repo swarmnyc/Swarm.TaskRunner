@@ -7,16 +7,16 @@ namespace Swarm.TaskRunner.Tests {
   public class TestModuleDefinition : ModuleDefinition {
     public string Arg { get; set; }
 
-    public TestModuleDefinition(Module module, YamlMappingNode node) : base(module, node) {
+    public TestModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
     }
   }
 
-  public class TestModule : Module {
+  public class TestModule : Module<TestModuleDefinition> {
     public int CallCount { get; set; }
 
     public List<string> CallArgs { get; } = new List<string>();
 
-    public override ModuleDefinition Parse(string version, YamlMappingNode node) {
+    public override TestModuleDefinition Parse(string version, YamlMappingNode node) {
       var def = new TestModuleDefinition(this, node);
 
       if (node.Children.ContainsKey("arg")) {
@@ -26,12 +26,11 @@ namespace Swarm.TaskRunner.Tests {
       return def;
     }
 
-    public override void Execute(TaskContext context, ModuleDefinition definition) {
-      var def = definition as TestModuleDefinition;
+    public override void Execute(TaskContext context, TestModuleDefinition definition) {
       CallCount++;
 
-      if (def.Arg != null) {
-        CallArgs.Add(def.Arg);
+      if (definition.Arg != null) {
+        CallArgs.Add(definition.Arg);
       }
     }
   }
