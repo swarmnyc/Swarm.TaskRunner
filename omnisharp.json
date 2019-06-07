@@ -1,7 +1,4 @@
 {
-    "RoslynExtensionsOptions": {
-        "enableAnalyzersSupport": true
-    },
     "FormattingOptions": {
         "NewLine": "\n",
         "UseTabs": false,
