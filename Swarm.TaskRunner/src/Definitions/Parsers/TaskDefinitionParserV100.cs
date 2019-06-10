@@ -1,6 +1,7 @@
 using Swarm.TaskRunner.Modules;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Definitions.Parser {
@@ -8,6 +9,8 @@ namespace Swarm.TaskRunner.Definitions.Parser {
     private TaskDefinition definition;
 
     public TaskDefinition Parse(YamlMappingNode rootNode) {
+      Contract.Requires(rootNode != null);
+
       definition = new TaskDefinition {
         Version = "1.0.0"
       };

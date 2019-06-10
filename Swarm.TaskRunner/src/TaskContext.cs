@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 
 namespace Swarm.TaskRunner {
@@ -18,6 +19,8 @@ namespace Swarm.TaskRunner {
     Geting value from EnvironmentVariables, if the string contain ${name}
     */
     public string GetValue(string input) {
+      Contract.Requires(input != null);
+
       Match m;
       while ((m = EnvRegex.Match(input)).Success) {
         string key = m.Groups[1].Value;
@@ -37,6 +40,7 @@ namespace Swarm.TaskRunner {
           throw new Exception($"Environment Variable \"{key}\" is not found");
         }
 
+        Contract.Requires(input != null);
         input = input.Replace(m.Value, value);
       }
 

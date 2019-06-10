@@ -3,7 +3,11 @@ using Swarm.TaskRunner.Logging;
 
 namespace Swarm.TaskRunner {
   public static class Logger {
-    public static LogProvider LogProvider { get; set; } = DefaultLogger;
+    static Logger() {
+      LogProvider = DefaultLogger;
+    }
+
+    public static LogProvider LogProvider { get; set; }
 
     public static bool IsColorEnabled {
       get {

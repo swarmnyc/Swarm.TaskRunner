@@ -3,12 +3,16 @@ using McMaster.Extensions.CommandLineUtils.Conventions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace Swarm.TaskRunner.CLI.Attributes {
   [AttributeUsage(AttributeTargets.Property)]
   public class EnvironmentVariablesAttribute : Attribute, IMemberConvention, McMaster.Extensions.CommandLineUtils.Validation.IOptionValidator {
     public void Apply(ConventionContext context, MemberInfo member) {
+      Contract.Requires(context != null);
+      Contract.Requires(member != null);
+
       var opt = context.Application.Option("-e|--env", "Environment Variables, input like '-e NAME=foo -e EMAIL=foo@bar.com'", CommandOptionType.MultipleValue);
       opt.Validators.Add(this);
 
@@ -26,6 +30,9 @@ namespace Swarm.TaskRunner.CLI.Attributes {
     }
 
     public ValidationResult GetValidationResult(CommandOption option, ValidationContext context) {
+      Contract.Requires(option != null);
+      Contract.Requires(context != null);
+
       foreach (var value in option.Values) {
         if (!(value is string input)) {
           return new ValidationResult($"Invalid environment variable for {value}");

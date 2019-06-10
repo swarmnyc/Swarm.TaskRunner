@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Swarm.TaskRunner;
+using Swarm.TaskRunner.Tests.Helpers;
 
 namespace Swarm.TaskRunner.Tests {
   public class TaskExecuterTest {

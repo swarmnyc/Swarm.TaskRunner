@@ -1,7 +1,7 @@
 version: "1.0.0"
 label: for test success
 modules:
-  test: Swarm.TaskRunner.Tests.TestModule, Swarm.TaskRunner.Tests
+  test: Swarm.TaskRunner.Tests.Helpers.TestModule, Swarm.TaskRunner.Tests
 
 steps:
 - module: test

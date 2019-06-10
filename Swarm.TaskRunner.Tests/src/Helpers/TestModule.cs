@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Swarm.TaskRunner.Modules;
 using YamlDotNet.RepresentationModel;
 
-namespace Swarm.TaskRunner.Tests {
+namespace Swarm.TaskRunner.Tests.Helpers {
   public class TestModule : Module<TestModuleDefinition> {
     public int CallCount { get; set; }
 
     public List<string> CallArgs { get; } = new List<string>();
 
     public override TestModuleDefinition Parse(string version, YamlMappingNode node) {
+      Contract.Requires(version != null);
+      Contract.Requires(node != null);
+
       var def = new TestModuleDefinition(this, node);
 
       if (node.Children.ContainsKey("arg")) {
@@ -20,6 +24,9 @@ namespace Swarm.TaskRunner.Tests {
     }
 
     public override void Execute(TaskContext context, TestModuleDefinition definition) {
+      Contract.Requires(context != null);
+      Contract.Requires(definition != null);
+
       CallCount++;
 
       if (definition.Arg != null) {

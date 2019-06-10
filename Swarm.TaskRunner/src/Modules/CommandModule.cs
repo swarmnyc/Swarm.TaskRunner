@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,31 +12,13 @@ namespace Swarm.TaskRunner.Modules {
     private Process process;
 
     public override CommandModuleDefinition Parse(string version, YamlMappingNode node) {
-      var definition = new CommandModuleDefinition(this, node) {
-        FilePath = (string)node.Children["file"]
-      };
-
-      if (node.Children.ContainsKey("pwd")) {
-        definition.WorkingDirectory = (string)node.Children["pwd"];
-      }
-
-      if (node.Children.ContainsKey("args")) {
-        var child = node.Children["args"];
-        if (child is YamlScalarNode) {
-          definition.Arguments = (string)child;
-        } else {
-          if (node.Children["args"] is YamlSequenceNode args) {
-            foreach (var item in args) {
-              definition.ArgumentList.Add((string)item);
-            }
-          }
-        }
-      }
-
-      return definition;
+      return new CommandModuleDefinition(this, node);
     }
 
     public override void Execute(TaskContext context, CommandModuleDefinition definition) {
+      Contract.Requires(context != null);
+      Contract.Requires(definition != null);
+
       ProcessStartInfo startInfo = new ProcessStartInfo();
       string filepath = context.GetValue(definition.FilePath);
       if (filepath.StartsWith(".")) {
@@ -43,11 +26,18 @@ namespace Swarm.TaskRunner.Modules {
       }
 
       startInfo.FileName = filepath;
+      string workingDirectory;
       if (definition.WorkingDirectory == null) {
-        startInfo.WorkingDirectory = context.WorkingDirectory;
+        workingDirectory = context.WorkingDirectory;
       } else {
-        startInfo.WorkingDirectory = context.GetValue(definition.WorkingDirectory);
+        workingDirectory = context.GetValue(definition.WorkingDirectory);
       }
+
+      if (workingDirectory.StartsWith(".")) {
+        workingDirectory = Path.GetFullPath(workingDirectory);
+      }
+
+      startInfo.WorkingDirectory = workingDirectory;
 
       if (definition.Arguments == null) {
         var arguments = definition.ArgumentList.Select(a => context.GetValue(a));
@@ -125,16 +115,36 @@ namespace Swarm.TaskRunner.Modules {
     }
 
     public void Dispose() {
-      process.Close();
-      process = null;
+      if (process != null) {
+        process.Close();
+        process = null;
+      }
     }
   }
 
   public class CommandModuleDefinition : ModuleDefinition {
-    public CommandModuleDefinition(IModule module) : base(module) {
+    public CommandModuleDefinition() {
     }
 
     public CommandModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+      FilePath = (string)node.Children["file"];
+
+      if (node.Children.ContainsKey("pwd")) {
+        WorkingDirectory = (string)node.Children["pwd"];
+      }
+
+      if (node.Children.ContainsKey("args")) {
+        var child = node.Children["args"];
+        if (child is YamlScalarNode) {
+          Arguments = (string)child;
+        } else {
+          if (node.Children["args"] is YamlSequenceNode args) {
+            foreach (var item in args) {
+              ArgumentList.Add((string)item);
+            }
+          }
+        }
+      }
     }
 
     public string FilePath { get; set; }

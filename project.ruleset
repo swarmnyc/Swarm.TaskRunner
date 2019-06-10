@@ -4,10 +4,12 @@
     <Rule Id="CA1031" Action="None" />
     <Rule Id="CA1056" Action="None" />
     <Rule Id="CA1716" Action="None" />
+    <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2007" Action="None" />
     <Rule Id="CA2227" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1305" Action="None" />
     <Rule Id="CA1307" Action="None" />
   </Rules>
@@ -23,5 +25,6 @@
     <Rule Id="SA1413" Action="None" />
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1208" Action="None" />
+    <Rule Id="SA1512" Action="None" />
   </Rules>
 </RuleSet>

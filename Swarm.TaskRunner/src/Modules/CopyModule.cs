@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using YamlDotNet.RepresentationModel;
 
 namespace Swarm.TaskRunner.Modules {
   public class CopyModule : Module<CopyModuleDefinition> {
     public override CopyModuleDefinition Parse(string version, YamlMappingNode node) {
-      return new CopyModuleDefinition(this, node) {
-        SourcePath = (string)node.Children["source"],
-        TargetPath = (string)node.Children["target"],
-        Pattern = node.Children.ContainsKey("pattern") ? (string)node.Children["pattern"] : "*"
-      };
+      return new CopyModuleDefinition(this, node);
     }
 
     public override void Execute(TaskContext context, CopyModuleDefinition definition) {
+      Contract.Requires(context != null);
+      Contract.Requires(definition != null);
+
       var source = GetDirectoryFullPath(context.GetValue(definition.SourcePath));
       var target = GetDirectoryFullPath(context.GetValue(definition.TargetPath));
       var pattern = context.GetValue(definition.Pattern);
@@ -71,10 +71,16 @@ namespace Swarm.TaskRunner.Modules {
   }
 
   public class CopyModuleDefinition : ModuleDefinition {
-    public CopyModuleDefinition(IModule module) : base(module) {
+    public CopyModuleDefinition() {
     }
 
     public CopyModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+      Contract.Requires(module != null);
+      Contract.Requires(node != null);
+
+      SourcePath = (string)node.Children["source"];
+      TargetPath = (string)node.Children["target"];
+      Pattern = node.Children.ContainsKey("pattern") ? (string)node.Children["pattern"] : "*";
     }
 
     public string SourcePath { get; set; }

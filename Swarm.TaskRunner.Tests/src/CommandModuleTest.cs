@@ -13,23 +13,24 @@ namespace Swarm.TaskRunner.Tests {
       StringBuilderLogger logger;
       Logger.LogProvider = logger = new StringBuilderLogger();
 
-      var module = new CommandModule();
-      var context = new TaskContext() {
-        EnvironmentVariables = new Dictionary<string, string>(),
-        SkippedSteps = new HashSet<int>(),
-        WorkingDirectory = "../../../../"
-      };
+      using (var module = new CommandModule()) {
+        var context = new TaskContext() {
+          EnvironmentVariables = new Dictionary<string, string>(),
+          SkippedSteps = new HashSet<int>(),
+          WorkingDirectory = "../../../"
+        };
 
-      var definition = new CommandModuleDefinition(module) {
-        FilePath = "dotnet",
-        Arguments = "list package"
-      };
+        var definition = new CommandModuleDefinition() {
+          FilePath = "dotnet",
+          Arguments = "list reference"
+        };
 
-      module.Execute(context, definition);
+        module.Execute(context, definition);
 
-      Assert.AreEqual("Executing dotnet list package", logger.Out.ToString(0, 29));
+        Assert.AreEqual("Executing dotnet list reference", logger.Out.ToString(0, 31));
 
-      Logger.ResetProvider();
+        Logger.ResetProvider();
+      }
     }
   }
 }
