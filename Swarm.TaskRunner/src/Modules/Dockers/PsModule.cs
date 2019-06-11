@@ -1,5 +1,6 @@
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
@@ -17,7 +18,12 @@ namespace Swarm.TaskRunner.Modules.Dockers {
       var client = CreateClient(definition);
 
       var task = client.Containers.ListContainersAsync(new ContainersListParameters() {
-        Limit = 10,
+        All = definition.All,
+        Size = definition.Size,
+        Limit = definition.Limit,
+        Since = definition.Since,
+        Before = definition.Before,
+        Filters = definition.Filters,
       });
 
       task.Wait();
@@ -40,6 +46,55 @@ namespace Swarm.TaskRunner.Modules.Dockers {
     }
 
     public PsModuleDefinition(IModule module, YamlMappingNode node) : base(module, node) {
+      if (node.Children.ContainsKey("size")) {
+        Size = bool.Parse((string)node.Children["size"]);
+      }
+
+      if (node.Children.ContainsKey("all")) {
+        All = bool.Parse((string)node.Children["all"]);
+      }
+
+      if (node.Children.ContainsKey("since")) {
+        Since = (string)node.Children["since"];
+      }
+
+      if (node.Children.ContainsKey("before")) {
+        Before = (string)node.Children["before"];
+      }
+
+      if (node.Children.ContainsKey("limit")) {
+        Limit = long.Parse((string)node.Children["limit"]);
+      }
+
+      if (node.Children.ContainsKey("filters")) {
+        Filters = new Dictionary<string, IDictionary<string, bool>>();
+        var filters = node.Children["filters"] as YamlSequenceNode;
+        foreach (YamlScalarNode filter in filters) {
+          var arr = filter.Value.Split("=");
+          if (arr.Length == 2) {
+            var prop = arr[0];
+            var value = arr[1];
+
+            if (!Filters.ContainsKey(prop)) {
+              Filters[prop] = new Dictionary<string, bool>();
+            }
+
+            Filters[prop][value] = true;
+          }
+        }
+      }
     }
+
+    public bool? Size { get; set; }
+
+    public bool? All { get; set; }
+
+    public string Since { get; set; }
+
+    public string Before { get; set; }
+
+    public long? Limit { get; set; }
+
+    public IDictionary<string, IDictionary<string, bool>> Filters { get; set; }
   }
 }
