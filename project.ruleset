@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Microsoft Managed Recommended Rules" ToolsVersion="16.0">
+<RuleSet Name="SWARM DotNet Rules" ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1031" Action="None" />
     <Rule Id="CA1056" Action="None" />

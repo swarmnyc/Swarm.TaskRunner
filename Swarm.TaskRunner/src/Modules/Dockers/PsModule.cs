@@ -1,5 +1,6 @@
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace Swarm.TaskRunner.Modules.Dockers {
         Filters = new Dictionary<string, IDictionary<string, bool>>();
         var filters = node.Children["filters"] as YamlSequenceNode;
         foreach (YamlScalarNode filter in filters) {
-          var arr = filter.Value.Split("=");
+          var arr = filter.Value.Split("=", 2);
           if (arr.Length == 2) {
             var prop = arr[0];
             var value = arr[1];
